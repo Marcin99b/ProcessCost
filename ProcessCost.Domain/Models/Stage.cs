@@ -1,11 +1,13 @@
 ﻿namespace ProcessCost.Domain.Models
 {
-    public class Stage(int day, Money money)
+    public class Stage(string name, int day, Money money)
     {
+        public string Name { get; } = name;
         public int Day { get; } = day;
         public Money Money { get; } = money;
 
-        public Stage Add(Stage anotherStage)
+
+        public Stage Add(Stage anotherStage, string newName = "")
         {
             Stage previous;
             Stage next;
@@ -19,7 +21,7 @@
                 previous = anotherStage;
                 next = this;
             }
-            return new Stage(next.Day, previous.Money + next.Money);
+            return new Stage(newName, next.Day, previous.Money + next.Money);
         }
     }
 }

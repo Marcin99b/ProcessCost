@@ -7,14 +7,14 @@ public record Money
 
     public Money(decimal amount, Currency currency)
     {
-        Currency = currency;
-        CalculationAmount = decimal.ToInt32(amount * 100);
+        this.Currency = currency;
+        this.CalculationAmount = decimal.ToInt32(amount * 100);
     }
 
     public Money(int calculationAmount, Currency currency)
     {
-        Currency = currency;
-        CalculationAmount = calculationAmount;
+        this.Currency = currency;
+        this.CalculationAmount = calculationAmount;
     }
 
     public static Money operator +(Money a, Money b)
@@ -29,13 +29,13 @@ public record Money
 
     public override string ToString()
     {
-        var amountAsText = CalculationAmount.ToString();
+        var amountAsText = this.CalculationAmount.ToString();
         if (amountAsText.Length == 2 || amountAsText.StartsWith('-') && amountAsText.Length == 3)
         {
             amountAsText = amountAsText.Insert(amountAsText.Length - 2, "0");
         }
         amountAsText = amountAsText.Insert(amountAsText.Length - 2, ",");
-        var result = $"{amountAsText} {Currency}";
+        var result = $"{amountAsText} {this.Currency}";
         return result;
     }
 }

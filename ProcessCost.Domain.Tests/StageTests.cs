@@ -30,16 +30,16 @@ namespace ProcessCost.Domain.Tests
         public void AddingStageShouldCopyDayFromNextAndSumAlwaysInChronologicalOrder()
         {
             //Arrange
-            var previous = new Stage(5, new Money(5.5M, Currency.PLN));
-            var next = new Stage(10, new Money(-2M, Currency.PLN));
+            var previous = new Stage("A",5, new Money(5.5M, Currency.PLN));
+            var next = new Stage("B",10, new Money(-2M, Currency.PLN));
 
             //Act
-            var resultA = previous.Add(next);
-            var resultB = next.Add(previous);
+            var resultA = previous.Add(next, "C");
+            var resultB = next.Add(previous, "C");
 
             //Assert
             resultA.Should().BeEquivalentTo(resultB);
-            resultA.Should().BeEquivalentTo(new Stage(10, new Money(3.5M, Currency.PLN)));
+            resultA.Should().BeEquivalentTo(new Stage("C",10, new Money(3.5M, Currency.PLN)));
         }
     }
 }
