@@ -4,17 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using ProcessCost.Domain.Models;
 
 namespace ProcessCost.Domain.Handlers
 {
-    public record GetStateAtSelectedDayRequest : IRequest<GetStateAtSelectedDayResponse>;
-    public record GetStateAtSelectedDayResponse;
+    public record GetStateAtSelectedDayRequest(int Day) : IRequest<GetStateAtSelectedDayResponse>;
+    public record GetStateAtSelectedDayResponse(Money Balance);
 
     public class GetStateAtSelectedDayHandler : IRequestHandler<GetStateAtSelectedDayRequest, GetStateAtSelectedDayResponse>
     {
+        private readonly Stage[] _db =
+        [
+            new Stage(01, new Money(10M, Currency.PLN)),
+            new Stage(05, new Money(10M, Currency.PLN)),
+            new Stage(10, new Money(100M, Currency.PLN)),
+            new Stage(12, new Money(-80M, Currency.PLN)),
+            new Stage(12, new Money(50M, Currency.PLN)),
+            new Stage(15, new Money(200M, Currency.PLN)),
+            new Stage(16, new Money(-30M, Currency.PLN)),
+            new Stage(19, new Money(-5M, Currency.PLN)),
+            new Stage(21, new Money(10M, Currency.PLN)),
+        ];
+
         public Task<GetStateAtSelectedDayResponse> Handle(GetStateAtSelectedDayRequest request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = this._db
+                .Where(x => x.Day <= request.Day)
+                .Aggregate((a,b) => a.Add(b));
+
+            return Task.FromResult(new GetStateAtSelectedDayResponse(result.Money));
         }
     }
 }

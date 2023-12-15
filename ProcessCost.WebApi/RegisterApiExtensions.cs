@@ -13,6 +13,11 @@ namespace ProcessCost.WebApi
                 ([FromServices] IMediator mediator) =>
                     mediator.Send(new GetStagesRequest()));
 
+            app.MapGet(
+                "/state/{day:int}",
+                ([FromServices] IMediator mediator, int day) =>
+                    mediator.Send(new GetStateAtSelectedDayRequest(day)));
+
             return app;
         }
     }

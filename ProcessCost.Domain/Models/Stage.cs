@@ -9,7 +9,7 @@
         {
             Stage previous;
             Stage next;
-            if (Day <= anotherStage.Day)
+            if (this.Day <= anotherStage.Day)
             {
                 previous = this;
                 next = anotherStage;
