@@ -1,4 +1,4 @@
-﻿namespace ProcessCost.Domain
+﻿namespace ProcessCost.Domain.Models
 {
     public class Stage(int day, Money money)
     {
@@ -9,7 +9,7 @@
         {
             Stage previous;
             Stage next;
-            if (this.Day <= anotherStage.Day)
+            if (Day <= anotherStage.Day)
             {
                 previous = this;
                 next = anotherStage;

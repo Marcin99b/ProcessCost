@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using ProcessCost.Domain.Models;
 
 namespace ProcessCost.Domain.Tests
 {

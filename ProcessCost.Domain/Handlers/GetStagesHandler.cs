@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
+using ProcessCost.Domain.Models;
 
 namespace ProcessCost.Domain.Handlers
 {
-    public record GetStagesRequest() : IRequest<GetStagesResponse>;
+    public record GetStagesRequest : IRequest<GetStagesResponse>;
     public record GetStagesResponse(Stage[] Stages);
 
     public class GetStagesHandler : IRequestHandler<GetStagesRequest, GetStagesResponse>

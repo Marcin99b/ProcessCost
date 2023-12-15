@@ -1,4 +1,4 @@
-﻿namespace ProcessCost.Domain;
+﻿namespace ProcessCost.Domain.Models;
 
 public enum Currency
 {
