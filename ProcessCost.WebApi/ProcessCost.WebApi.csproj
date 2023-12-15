@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProcessCost.Database\ProcessCost.Database.csproj" />
     <ProjectReference Include="..\ProcessCost.Domain\ProcessCost.Domain.csproj" />
   </ItemGroup>
 

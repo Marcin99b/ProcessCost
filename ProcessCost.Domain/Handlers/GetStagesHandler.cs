@@ -21,10 +21,8 @@ namespace ProcessCost.Domain.Handlers
             new Stage("A", 21, new Money(10M, Currency.PLN)),
         ];
 
-        public GetStagesHandler(Db db)
+        public GetStagesHandler()
         {
-            var item = new Stage("A", 3, new Money(2M, Currency.PLN));
-            db.Stages.Add(item);
         }
 
         public Task<GetStagesResponse> Handle(GetStagesRequest request, CancellationToken cancellationToken)

@@ -1,12 +1,12 @@
 using System.Reflection;
-using ProcessCost.Domain;
+using ProcessCost.Database;
 using ProcessCost.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<Db>();
+builder.Services.AddScoped<DatabaseContext>();
 
 var assemblies = typeof(Program)
     .Assembly
