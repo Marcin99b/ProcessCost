@@ -1,45 +1,44 @@
 ﻿using FluentAssertions;
 using ProcessCost.Domain.Models;
 
-namespace ProcessCost.Domain.Tests
+namespace ProcessCost.Domain.Tests;
+
+[TestFixture]
+public class StageTests
 {
-    [TestFixture]
-    public class StageTests
+    [TestCase(10, Currency.PLN, "10,00 PLN")]
+    [TestCase(1, Currency.PLN, "1,00 PLN")]
+    [TestCase(0.50, Currency.PLN, "0,50 PLN")]
+    [TestCase(-0.50, Currency.PLN, "-0,50 PLN")]
+    [TestCase(10.50, Currency.PLN, "10,50 PLN")]
+    [TestCase(10.50, Currency.EUR, "10,50 EUR")]
+    [TestCase(10.50, Currency.USD, "10,50 USD")]
+    [TestCase(-10, Currency.PLN, "-10,00 PLN")]
+    public void MoneyShouldConvertItselfToString(decimal amount, Currency currency, string expected)
     {
-        [TestCase(10, Currency.PLN, "10,00 PLN")]
-        [TestCase(1, Currency.PLN, "1,00 PLN")]
-        [TestCase(0.50, Currency.PLN, "0,50 PLN")]
-        [TestCase(-0.50, Currency.PLN, "-0,50 PLN")]
-        [TestCase(10.50, Currency.PLN, "10,50 PLN")]
-        [TestCase(10.50, Currency.EUR, "10,50 EUR")]
-        [TestCase(10.50, Currency.USD, "10,50 USD")]
-        [TestCase(-10, Currency.PLN, "-10,00 PLN")]
-        public void MoneyShouldConvertItselfToString(decimal amount, Currency currency, string expected)
-        {
-            //Arrange
-            var money = new Money(amount, currency);
+        //Arrange
+        var money = new Money(amount, currency);
 
-            //Act
-            var text = money.ToString();
+        //Act
+        var text = money.ToString();
 
-            //Assert
-            text.Should().Be(expected);
-        }
+        //Assert
+        text.Should().Be(expected);
+    }
 
-        [Test]
-        public void AddingStageShouldCopyDayFromNextAndSumAlwaysInChronologicalOrder()
-        {
-            //Arrange
-            var previous = new Stage("A",5, new Money(5.5M, Currency.PLN));
-            var next = new Stage("B",10, new Money(-2M, Currency.PLN));
+    [Test]
+    public void AddingStageShouldCopyDayFromNextAndSumAlwaysInChronologicalOrder()
+    {
+        //Arrange
+        var previous = new Stage("A", 5, new(5.5M, Currency.PLN));
+        var next = new Stage("B", 10, new(-2M, Currency.PLN));
 
-            //Act
-            var resultA = previous.Add(next, "C");
-            var resultB = next.Add(previous, "C");
+        //Act
+        var resultA = previous.Add(next, "C");
+        var resultB = next.Add(previous, "C");
 
-            //Assert
-            resultA.Should().BeEquivalentTo(resultB);
-            resultA.Should().BeEquivalentTo(new Stage("C",10, new Money(3.5M, Currency.PLN)));
-        }
+        //Assert
+        resultA.Should().BeEquivalentTo(resultB);
+        resultA.Should().BeEquivalentTo(new Stage("C", 10, new(3.5M, Currency.PLN)));
     }
 }

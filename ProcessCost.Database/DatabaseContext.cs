@@ -7,8 +7,8 @@ public class DatabaseContext : DbContext
 {
     public DbSet<StageEntity> Stages { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
-        optionsBuilder.UseInMemoryDatabase(databaseName: "ProcessCostDb");
+        builder.UseInMemoryDatabase("ProcessCostDb");
     }
 }

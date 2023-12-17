@@ -1,33 +1,29 @@
 ﻿using MediatR;
 using ProcessCost.Domain.Models;
 
-namespace ProcessCost.Domain.Handlers
+namespace ProcessCost.Domain.Handlers;
+
+public record GetStagesRequest : IRequest<GetStagesResponse>;
+
+public record GetStagesResponse(Stage[] Stages);
+
+public class GetStagesHandler : IRequestHandler<GetStagesRequest, GetStagesResponse>
 {
-    public record GetStagesRequest : IRequest<GetStagesResponse>;
-    public record GetStagesResponse(Stage[] Stages);
+    private readonly Stage[] _db =
+    [
+        new("A", 01, new(10M, Currency.PLN)),
+        new("A", 05, new(10M, Currency.PLN)),
+        new("A", 10, new(100M, Currency.PLN)),
+        new("A", 12, new(-80M, Currency.PLN)),
+        new("A", 12, new(50M, Currency.PLN)),
+        new("A", 15, new(200M, Currency.PLN)),
+        new("A", 16, new(-30M, Currency.PLN)),
+        new("A", 19, new(-5M, Currency.PLN)),
+        new("A", 21, new(10M, Currency.PLN)),
+    ];
 
-    public class GetStagesHandler : IRequestHandler<GetStagesRequest, GetStagesResponse>
+    public Task<GetStagesResponse> Handle(GetStagesRequest request, CancellationToken cancellationToken)
     {
-        private readonly Stage[] _db =
-        [
-            new Stage("A", 01, new Money(10M, Currency.PLN)),
-            new Stage("A", 05, new Money(10M, Currency.PLN)),
-            new Stage("A", 10, new Money(100M, Currency.PLN)),
-            new Stage("A", 12, new Money(-80M, Currency.PLN)),
-            new Stage("A", 12, new Money(50M, Currency.PLN)),
-            new Stage("A", 15, new Money(200M, Currency.PLN)),
-            new Stage("A", 16, new Money(-30M, Currency.PLN)),
-            new Stage("A", 19, new Money(-5M, Currency.PLN)),
-            new Stage("A", 21, new Money(10M, Currency.PLN)),
-        ];
-
-        public GetStagesHandler()
-        {
-        }
-
-        public Task<GetStagesResponse> Handle(GetStagesRequest request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new GetStagesResponse(this._db));
-        }
+        return Task.FromResult(new GetStagesResponse(this._db));
     }
 }

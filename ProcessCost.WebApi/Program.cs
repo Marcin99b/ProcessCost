@@ -13,7 +13,7 @@ var assemblies = typeof(Program)
     .GetReferencedAssemblies()
     .Select(Assembly.Load)
     .ToArray();
-builder.Services.AddMediatR(cfg => 
+builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblies(assemblies));
 
 var app = builder.Build();
@@ -30,4 +30,6 @@ app.SetupStagesApi();
 
 app.Run();
 
-public partial class Program { }
+public partial class Program
+{
+}

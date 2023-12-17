@@ -23,17 +23,19 @@ public record Money
         {
             throw new ArgumentException("Money must have same currency");
         }
+
         var sum = a.CalculationAmount + b.CalculationAmount;
-        return new Money(sum, a.Currency);
+        return new(sum, a.Currency);
     }
 
     public override string ToString()
     {
         var amountAsText = this.CalculationAmount.ToString();
-        if (amountAsText.Length == 2 || amountAsText.StartsWith('-') && amountAsText.Length == 3)
+        if (amountAsText.Length == 2 || (amountAsText.StartsWith('-') && amountAsText.Length == 3))
         {
             amountAsText = amountAsText.Insert(amountAsText.Length - 2, "0");
         }
+
         amountAsText = amountAsText.Insert(amountAsText.Length - 2, ",");
         var result = $"{amountAsText} {this.Currency}";
         return result;

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessCost.Domain.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessCost.WebApi", "ProcessCost.WebApi\ProcessCost.WebApi.csproj", "{A0703E7B-FC38-4D87-A055-0F2AF137545F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessCost.Database", "ProcessCost.Database\ProcessCost.Database.csproj", "{3189F545-88F3-4464-BEBD-08545970056D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessCost.Database", "ProcessCost.Database\ProcessCost.Database.csproj", "{3189F545-88F3-4464-BEBD-08545970056D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
