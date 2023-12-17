@@ -2,6 +2,7 @@
 
 public class Stage(string name, int day, Money money)
 {
+    public Guid Id { get; init; } = Guid.NewGuid();
     public string Name { get; } = name;
     public int Day { get; } = day;
     public Money Money { get; } = money;

@@ -38,7 +38,7 @@ public class StageTests
         var resultB = next.Add(previous, "C");
 
         //Assert
-        resultA.Should().BeEquivalentTo(resultB);
-        resultA.Should().BeEquivalentTo(new Stage("C", 10, new(3.5M, Currency.PLN)));
+        resultA.Should().BeEquivalentTo(resultB, x => x.Excluding(o => o.Id));
+        resultA.Should().BeEquivalentTo(new Stage("C", 10, new(3.5M, Currency.PLN)), x => x.Excluding(o => o.Id));
     }
 }
