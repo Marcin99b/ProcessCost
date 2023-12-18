@@ -3,6 +3,11 @@
 namespace ProcessCost.Domain;
 public interface IStagesRepository
 {
-    public Task<Stage> GetStageById(Guid stageId);
-    public Task<IEnumerable<Stage>> GetAllStagesOfUser(Guid userId);
+    public Stage GetStageById(Guid stageId);
+    public IEnumerable<Stage> GetAllStagesOfUser(Guid userId);
+
+    public Task Add(Stage stage);
+    public Task Update(Stage stage);
+
+    public Task Delete(Guid stageId);
 }

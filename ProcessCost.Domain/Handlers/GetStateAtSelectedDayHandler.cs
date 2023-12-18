@@ -13,11 +13,12 @@ public class GetStateAtSelectedDayHandler(IStagesRepository stagesRepository)
     public async Task<GetStateAtSelectedDayResponse> Handle(GetStateAtSelectedDayRequest request,
         CancellationToken cancellationToken)
     {
-        var stages = await stagesRepository.GetAllStagesOfUser(Guid.Empty);
+        var stages = stagesRepository.GetAllStagesOfUser(Guid.Empty);
         var result = stages
             .Where(x => x.Day <= request.Day)
             .Aggregate((a, b) => a.Add(b));
 
+        await Task.CompletedTask;
         return new GetStateAtSelectedDayResponse(result.Money);
     }
 }

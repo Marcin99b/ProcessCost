@@ -11,7 +11,8 @@ public class GetStagesHandler(IStagesRepository stagesRepository) : IRequestHand
 {
     public async Task<GetStagesResponse> Handle(GetStagesRequest request, CancellationToken cancellationToken)
     {
-        var stages = await stagesRepository.GetAllStagesOfUser(Guid.Empty);
+        var stages = stagesRepository.GetAllStagesOfUser(Guid.Empty);
+        await Task.CompletedTask;
         return new GetStagesResponse(stages.ToArray());
     }
 }

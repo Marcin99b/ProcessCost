@@ -2,8 +2,8 @@
 
 public record StageEntity : Entity
 {
-    public string Name { get; set; }
-    public int Day { get; set; }
-    public int MoneyAmount { get; set; }
-    public string MoneyCurrency { get; set; }
+    public string Name { get; init; }
+    public int Day { get; init; }
+    public int MoneyAmount { get; init; }
+    public string MoneyCurrency { get; init; }
 }

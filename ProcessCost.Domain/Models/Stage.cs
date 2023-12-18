@@ -7,7 +7,6 @@ public class Stage(string name, int day, Money money)
     public int Day { get; } = day;
     public Money Money { get; } = money;
 
-
     public Stage Add(Stage anotherStage, string newName = "")
     {
         Stage previous;
