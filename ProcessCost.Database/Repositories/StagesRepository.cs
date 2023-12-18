@@ -6,10 +6,10 @@ namespace ProcessCost.Database.Repositories;
 
 public class StagesRepository(DatabaseContext context) : IStagesRepository
 {
-    public Stage GetStageById(Guid stageId)
+    public Stage? GetStageById(Guid stageId)
     {
         var stages = this.GetAllStagesOfUser(Guid.Empty);
-        return stages.First();
+        return stages.FirstOrDefault();
     }
 
     public IEnumerable<Stage> GetAllStagesOfUser(Guid userId)

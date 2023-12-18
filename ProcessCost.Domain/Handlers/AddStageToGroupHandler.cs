@@ -11,7 +11,7 @@ public class AddStageToGroupHandler(IStagesGroupsRepository stagesGroupsReposito
 {
     public async Task<AddStageToGroupResponse> Handle(AddStageToGroupRequest request, CancellationToken cancellationToken)
     {
-        var stage = stagesRepository.GetStageById(request.StageId);
+        var stage = stagesRepository.GetStageById(request.StageId)!;
         var group = stagesGroupsRepository.GetById(request.GroupId);
         group.AddStage(stage);
         await stagesGroupsRepository.Update(group);

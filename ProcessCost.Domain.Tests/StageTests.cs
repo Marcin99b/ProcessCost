@@ -21,7 +21,6 @@ public class StageTests
 
         //Act
         var text = money.ToString();
-
         //Assert
         text.Should().Be(expected);
     }

@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessCost.IntegrationTests", "ProcessCost.IntegrationTests\ProcessCost.IntegrationTests.csproj", "{CD486C8C-19BE-4203-8A50-4C23D5EB9E1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{3189F545-88F3-4464-BEBD-08545970056D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3189F545-88F3-4464-BEBD-08545970056D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3189F545-88F3-4464-BEBD-08545970056D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD486C8C-19BE-4203-8A50-4C23D5EB9E1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD486C8C-19BE-4203-8A50-4C23D5EB9E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD486C8C-19BE-4203-8A50-4C23D5EB9E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD486C8C-19BE-4203-8A50-4C23D5EB9E1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

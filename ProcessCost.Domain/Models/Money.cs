@@ -2,8 +2,12 @@
 
 public record Money
 {
-    public int CalculationAmount { get; }
-    public Currency Currency { get; }
+    public int CalculationAmount { get; init; }
+    public Currency Currency { get; init; }
+
+    public Money()
+    {
+    }
 
     public Money(decimal amount, Currency currency)
     {
@@ -39,6 +43,10 @@ public record Money
         return new(sum, a.Currency);
     }
 
+    /// <summary>
+    /// Examples: 10,00 PLN | 1,00 PLN | -0,50 PLN | 0,50 PLN | -10,50 PLN
+    /// </summary>
+    /// <returns></returns>
     public override string ToString()
     {
         var amountAsText = this.CalculationAmount.ToString();

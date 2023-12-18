@@ -27,8 +27,6 @@ builder.Services.AddMediatR(cfg =>
 
 var app = builder.Build();
 
-await InitializeDb(app);
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -37,41 +35,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.SetupStagesApi();
+app.SetupStagesApiV1();
 
 app.Run();
-return;
-
-static async Task InitializeDb(IHost app)
-{
-    List<Stage> stages =
-    [
-        new("A", 01, new(10M, Currency.PLN)),
-        new("A", 05, new(10M, Currency.PLN)),
-        new("A", 10, new(100M, Currency.PLN)),
-        new("A", 12, new(-80M, Currency.PLN)),
-        new("A", 12, new(50M, Currency.PLN)),
-        new("A", 15, new(200M, Currency.PLN)),
-        new("A", 16, new(-30M, Currency.PLN)),
-        new("A", 19, new(-5M, Currency.PLN)),
-        new("A", 21, new(10M, Currency.PLN)),
-    ];
-
-    var group = new StageGroup("ABC");
-    group.AddStage(stages[0]);
-    group.AddStage(stages[1]);
-
-    using var scope = app.Services.CreateScope();
-    var stagesRepository = scope.ServiceProvider.GetService<IStagesRepository>()!;
-    var stagesGroupsRepository = scope.ServiceProvider.GetService<IStagesGroupsRepository>()!;
-
-    foreach (var stage in stages)
-    {
-        await stagesRepository.Add(stage);
-    }
-
-    await stagesGroupsRepository.Create(group);
-}
 
 public partial class Program
 {
