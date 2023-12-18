@@ -85,7 +85,7 @@ public class StageTests
         var act = () => group.AddStage(stage);;
 
         //Assert
-        act.Should().Throw<Exception>().Which.Message.Should().Be("Group already contains stage");
+        act.Should().Throw<Exception>().WithMessage("Group already contains stage");
     }
 
     [Test]
@@ -99,6 +99,6 @@ public class StageTests
         var act = () => group.RemoveStage(stage);
 
         //Assert
-        act.Should().Throw<Exception>().Which.Message.Should().Be("Group doesn't contains stage");
+        act.Should().Throw<Exception>().WithMessage("Group doesn't contains stage");
     }
 }

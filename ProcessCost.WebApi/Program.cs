@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DatabaseContext>();
 builder.Services.AddScoped<IStagesRepository, StagesRepository>();
+builder.Services.AddScoped<IStagesGroupsRepository, StagesGroupsRepository>();
 
 var assemblies = typeof(Program)
     .Assembly
