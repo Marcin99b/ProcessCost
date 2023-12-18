@@ -1,8 +1,9 @@
-using System.Reflection;
 using ProcessCost.Database;
 using ProcessCost.Database.Repositories;
 using ProcessCost.Domain;
+using ProcessCost.Domain.Models;
 using ProcessCost.WebApi;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,7 @@ builder.Services.AddMediatR(cfg =>
 
 var app = builder.Build();
 
-InitializeDb(app);
+await InitializeDb(app);
 
 if (app.Environment.IsDevelopment())
 {
@@ -37,22 +38,30 @@ app.SetupStagesApi();
 app.Run();
 return;
 
-void InitializeDb(IHost app)
+static async Task InitializeDb(IHost app)
 {
+    List<Stage> stages =
+    [
+        new("A", 01, new(10M, Currency.PLN)),
+        new("A", 05, new(10M, Currency.PLN)),
+        new("A", 10, new(100M, Currency.PLN)),
+        new("A", 12, new(-80M, Currency.PLN)),
+        new("A", 12, new(50M, Currency.PLN)),
+        new("A", 15, new(200M, Currency.PLN)),
+        new("A", 16, new(-30M, Currency.PLN)),
+        new("A", 19, new(-5M, Currency.PLN)),
+        new("A", 21, new(10M, Currency.PLN)),
+    ];
+
+    var group = new StageGroup("ABC", new(20M, Currency.PLN), stages.Select(x => x.Id).Take(2).ToHashSet());
+
     using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetService<DatabaseContext>()!;
-    context.Stages.AddRange([
-        new() { Id = Guid.NewGuid(), Day = 01, MoneyAmount = 10_00, MoneyCurrency = "PLN", Name = "A", },
-        new() { Id = Guid.NewGuid(), Day = 05, MoneyAmount = 10_00, MoneyCurrency = "PLN", Name = "A", },
-        new() { Id = Guid.NewGuid(), Day = 10, MoneyAmount = 100_00, MoneyCurrency = "PLN", Name = "A", },
-        new() { Id = Guid.NewGuid(), Day = 12, MoneyAmount = -80_00, MoneyCurrency = "PLN", Name = "A", },
-        new() { Id = Guid.NewGuid(), Day = 12, MoneyAmount = 50_00, MoneyCurrency = "PLN", Name = "A", },
-        new() { Id = Guid.NewGuid(), Day = 15, MoneyAmount = 200_00, MoneyCurrency = "PLN", Name = "A", },
-        new() { Id = Guid.NewGuid(), Day = 16, MoneyAmount = -30_00, MoneyCurrency = "PLN", Name = "A", },
-        new() { Id = Guid.NewGuid(), Day = 19, MoneyAmount = -5_00, MoneyCurrency = "PLN", Name = "A", },
-        new() { Id = Guid.NewGuid(), Day = 21, MoneyAmount = 10_00, MoneyCurrency = "PLN", Name = "A", },
-    ]);
-    context.SaveChanges();
+    var stagesRepository = scope.ServiceProvider.GetService<IStagesRepository>()!;
+
+    foreach (var stage in stages)
+    {
+        await stagesRepository.Add(stage);
+    }
 }
 
 public partial class Program

@@ -15,7 +15,7 @@ public static class RegisterApiExtensions
 
         app.MapGet(
             "/state/{day:int}",
-            ([FromServices] IMediator mediator, int day) =>
+            ([FromServices] IMediator mediator, [FromQuery] int day) =>
                 mediator.Send(new GetStateAtSelectedDayRequest(day)));
 
         app.MapPost(

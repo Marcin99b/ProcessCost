@@ -12,3 +12,8 @@ public interface IStagesRepository
 
     public Task Delete(Guid stageId);
 }
+
+public interface IStagesGropusRepository
+{
+    //public Task Add(StageGroup )
+}
