@@ -28,10 +28,21 @@ public record Money
         return new(sum, a.Currency);
     }
 
+    public static Money operator -(Money a, Money b)
+    {
+        if (a.Currency != b.Currency)
+        {
+            throw new ArgumentException("Money must have same currency");
+        }
+
+        var sum = a.CalculationAmount - b.CalculationAmount;
+        return new(sum, a.Currency);
+    }
+
     public override string ToString()
     {
         var amountAsText = this.CalculationAmount.ToString();
-        if (amountAsText.Length == 2 || (amountAsText.StartsWith('-') && amountAsText.Length == 3))
+        if (amountAsText.Length == 2 || amountAsText.StartsWith('-') && amountAsText.Length == 3)
         {
             amountAsText = amountAsText.Insert(amountAsText.Length - 2, "0");
         }

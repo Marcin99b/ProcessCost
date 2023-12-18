@@ -37,7 +37,7 @@ app.SetupStagesApi();
 app.Run();
 return;
 
-void InitializeDb(WebApplication app)
+void InitializeDb(IHost app)
 {
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetService<DatabaseContext>()!;

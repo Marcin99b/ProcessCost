@@ -6,7 +6,6 @@ public class StageGroup(string name, Money money, ISet<Guid> stagesIds)
     public Guid Id { get; init; } = Guid.NewGuid();
     public string Name { get; } = name;
     public Money Money { get; private set; } = money;
-
     public IEnumerable<Guid> StagesIds => this._stagesIds;
 
     public void AddStage(Stage stage)
@@ -17,7 +16,7 @@ public class StageGroup(string name, Money money, ISet<Guid> stagesIds)
 
     public void RemoveStage(Stage stage)
     {
-        this.Money += stage.Money;
+        this.Money -= stage.Money;
         this._stagesIds.Remove(stage.Id);
     }
 }

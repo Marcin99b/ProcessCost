@@ -41,4 +41,34 @@ public class StageTests
         resultA.Should().BeEquivalentTo(resultB, x => x.Excluding(o => o.Id));
         resultA.Should().BeEquivalentTo(new Stage("C", 10, new(3.5M, Currency.PLN)), x => x.Excluding(o => o.Id));
     }
+
+    [Test]
+    public void AddingStageToGroupShouldRecalculateMoney()
+    {
+        //Arrange
+        var stage = new Stage("A", 5, new(10M, Currency.PLN));
+        var group = new StageGroup("B", new(0M, Currency.PLN), new HashSet<Guid>());
+
+        //Act
+        group.AddStage(stage);
+
+        //Assert
+        group.Money.CalculationAmount.Should().Be(10_00);
+        group.StagesIds.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void RemovingStageFromGroupShouldRecalculateMoney()
+    {
+        //Arrange
+        var stage = new Stage("A", 5, new(10M, Currency.PLN));
+        var group = new StageGroup("B", new(10M, Currency.PLN), new HashSet<Guid> { stage.Id });
+
+        //Act
+        group.RemoveStage(stage);
+
+        //Assert
+        group.Money.CalculationAmount.Should().Be(0);
+        group.StagesIds.Should().HaveCount(0);
+    }
 }

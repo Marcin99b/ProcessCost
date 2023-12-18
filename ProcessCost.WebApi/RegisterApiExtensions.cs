@@ -18,6 +18,21 @@ public static class RegisterApiExtensions
             ([FromServices] IMediator mediator, int day) =>
                 mediator.Send(new GetStateAtSelectedDayRequest(day)));
 
+        app.MapPost(
+            "/stages/groups",
+            ([FromServices] IMediator mediator, [FromBody] CreateStageGroupRequest request) =>
+                mediator.Send(request));
+
+        app.MapPost(
+            "/stages/groups/add",
+            ([FromServices] IMediator mediator, [FromBody] AddStageToGroupRequest request) =>
+                mediator.Send(request));
+
+        app.MapPost(
+            "/stages/groups/remove",
+            ([FromServices] IMediator mediator, [FromBody] RemoveStageFromGroupRequest request) =>
+                mediator.Send(request));
+
         return app;
     }
 }
