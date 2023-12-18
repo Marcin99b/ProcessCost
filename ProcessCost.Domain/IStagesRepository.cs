@@ -1,6 +1,7 @@
 ﻿using ProcessCost.Domain.Models;
 
 namespace ProcessCost.Domain;
+
 public interface IStagesRepository
 {
     public Stage GetStageById(Guid stageId);

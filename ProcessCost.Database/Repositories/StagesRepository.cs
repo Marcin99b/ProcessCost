@@ -3,6 +3,7 @@ using ProcessCost.Domain;
 using ProcessCost.Domain.Models;
 
 namespace ProcessCost.Database.Repositories;
+
 public class StagesRepository(DatabaseContext context) : IStagesRepository
 {
     public Stage GetStageById(Guid stageId)
@@ -21,7 +22,11 @@ public class StagesRepository(DatabaseContext context) : IStagesRepository
 
     public async Task Add(Stage stage)
     {
-        var entity = new StageEntity() { Id = stage.Id, Day = stage.Day, Name = stage.Name, MoneyAmount = stage.Money.CalculationAmount, MoneyCurrency = stage.Money.Currency.ToString() };
+        var entity = new StageEntity
+        {
+            Id = stage.Id, Day = stage.Day, Name = stage.Name, MoneyAmount = stage.Money.CalculationAmount,
+            MoneyCurrency = stage.Money.Currency.ToString(),
+        };
         await context.Stages.AddAsync(entity);
         await context.SaveChangesAsync();
     }

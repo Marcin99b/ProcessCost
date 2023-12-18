@@ -19,6 +19,6 @@ public class GetStateAtSelectedDayHandler(IStagesRepository stagesRepository)
             .Aggregate((a, b) => a.Add(b));
 
         await Task.CompletedTask;
-        return new GetStateAtSelectedDayResponse(result.Money);
+        return new(result.Money);
     }
 }

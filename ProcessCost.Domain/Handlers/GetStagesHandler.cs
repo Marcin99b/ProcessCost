@@ -13,6 +13,6 @@ public class GetStagesHandler(IStagesRepository stagesRepository) : IRequestHand
     {
         var stages = stagesRepository.GetAllStagesOfUser(Guid.Empty);
         await Task.CompletedTask;
-        return new GetStagesResponse(stages.ToArray());
+        return new(stages.ToArray());
     }
 }
