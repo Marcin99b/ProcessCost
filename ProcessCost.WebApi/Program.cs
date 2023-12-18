@@ -53,15 +53,20 @@ static async Task InitializeDb(IHost app)
         new("A", 21, new(10M, Currency.PLN)),
     ];
 
-    var group = new StageGroup("ABC", new(20M, Currency.PLN), stages.Select(x => x.Id).Take(2).ToHashSet());
+    var group = new StageGroup("ABC");
+    group.AddStage(stages[0]);
+    group.AddStage(stages[1]);
 
     using var scope = app.Services.CreateScope();
     var stagesRepository = scope.ServiceProvider.GetService<IStagesRepository>()!;
+    var stagesGroupsRepository = scope.ServiceProvider.GetService<IStagesGroupsRepository>()!;
 
     foreach (var stage in stages)
     {
         await stagesRepository.Add(stage);
     }
+
+    await stagesGroupsRepository.Add(group);
 }
 
 public partial class Program

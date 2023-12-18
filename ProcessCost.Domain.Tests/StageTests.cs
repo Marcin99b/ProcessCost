@@ -47,7 +47,7 @@ public class StageTests
     {
         //Arrange
         var stage = new Stage("A", 5, new(10M, Currency.PLN));
-        var group = new StageGroup("B", new(0M, Currency.PLN), new HashSet<Guid>());
+        var group = new StageGroup("B");
 
         //Act
         group.AddStage(stage);
@@ -62,7 +62,8 @@ public class StageTests
     {
         //Arrange
         var stage = new Stage("A", 5, new(10M, Currency.PLN));
-        var group = new StageGroup("B", new(10M, Currency.PLN), new HashSet<Guid> { stage.Id });
+        var group = new StageGroup("B");
+        group.AddStage(stage);
 
         //Act
         group.RemoveStage(stage);
@@ -70,5 +71,34 @@ public class StageTests
         //Assert
         group.Money.CalculationAmount.Should().Be(0);
         group.StagesIds.Should().HaveCount(0);
+    }
+
+    [Test]
+    public void GroupShouldProtectFromAddingSameStageTwice()
+    {
+        //Arrange
+        var stage = new Stage("A", 5, new(10M, Currency.PLN));
+        var group = new StageGroup("B");
+
+        //Act
+        group.AddStage(stage);
+        var act = () => group.AddStage(stage);;
+
+        //Assert
+        act.Should().Throw<Exception>().Which.Message.Should().Be("Group already contains stage");
+    }
+
+    [Test]
+    public void GroupShouldProtectFromRemovingNotExistedStage()
+    {
+        //Arrange
+        var stage = new Stage("A", 5, new(10M, Currency.PLN));
+        var group = new StageGroup("B");
+
+        //Act
+        var act = () => group.RemoveStage(stage);
+
+        //Assert
+        act.Should().Throw<Exception>().Which.Message.Should().Be("Group doesn't contains stage");
     }
 }
