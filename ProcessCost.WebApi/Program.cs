@@ -1,9 +1,9 @@
+using System.Reflection;
 using ProcessCost.Database;
 using ProcessCost.Database.Repositories;
 using ProcessCost.Domain;
 using ProcessCost.Domain.Models;
 using ProcessCost.WebApi;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 

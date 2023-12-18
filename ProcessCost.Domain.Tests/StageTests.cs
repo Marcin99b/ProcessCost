@@ -82,7 +82,8 @@ public class StageTests
 
         //Act
         group.AddStage(stage);
-        var act = () => group.AddStage(stage);;
+        var act = () => group.AddStage(stage);
+        ;
 
         //Assert
         act.Should().Throw<Exception>().WithMessage("Group already contains stage");

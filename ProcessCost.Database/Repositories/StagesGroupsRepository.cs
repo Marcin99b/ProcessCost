@@ -9,9 +9,10 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
     public async Task Add(StageGroup group)
     {
         //todo refactor
-        var groupEntity = new StageGroupEntity()
+        var groupEntity = new StageGroupEntity
         {
-            Id = group.Id, Name = group.Name, MoneyAmount = group.Money.CalculationAmount, MoneyCurrency = group.Money.Currency.ToString()
+            Id = group.Id, Name = group.Name, MoneyAmount = group.Money.CalculationAmount,
+            MoneyCurrency = group.Money.Currency.ToString(),
         };
 
         var registeredStagesInCurrentGroup =
@@ -29,12 +30,14 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
         {
             if (!registeredStagesInCurrentGroup.Any(x => x.StageId == stageId))
             {
-                await context.StagesGropusReferences.AddAsync(new StageGroupReferenceEntity() {Id = Guid.NewGuid(), StageGroupId = group.Id, StageId = stageId,});
+                await context.StagesGropusReferences.AddAsync(new()
+                    { Id = Guid.NewGuid(), StageGroupId = group.Id, StageId = stageId, });
             }
         }
 
-        await context.StagesGropus.AddAsync(new (){ 
-            Id = group.Id, 
+        await context.StagesGropus.AddAsync(new()
+        {
+            Id = group.Id,
             Name = group.Name,
             MoneyAmount = group.Money.CalculationAmount,
             MoneyCurrency = group.Money.Currency.ToString(),
@@ -46,12 +49,12 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
     public async Task Update(StageGroup group)
     {
         //todo refactor
-        var groupEntity = new StageGroupEntity()
+        var groupEntity = new StageGroupEntity
         {
             Id = group.Id,
             Name = group.Name,
             MoneyAmount = group.Money.CalculationAmount,
-            MoneyCurrency = group.Money.Currency.ToString()
+            MoneyCurrency = group.Money.Currency.ToString(),
         };
 
         var registeredStagesInCurrentGroup =
@@ -69,7 +72,8 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
         {
             if (!registeredStagesInCurrentGroup.Any(x => x.StageId == stageId))
             {
-                await context.StagesGropusReferences.AddAsync(new () { Id = Guid.NewGuid(), StageGroupId = group.Id, StageId = stageId, });
+                await context.StagesGropusReferences.AddAsync(new()
+                    { Id = Guid.NewGuid(), StageGroupId = group.Id, StageId = stageId, });
             }
         }
 

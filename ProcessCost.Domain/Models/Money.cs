@@ -42,7 +42,7 @@ public record Money
     public override string ToString()
     {
         var amountAsText = this.CalculationAmount.ToString();
-        if (amountAsText.Length == 2 || amountAsText.StartsWith('-') && amountAsText.Length == 3)
+        if (amountAsText.Length == 2 || (amountAsText.StartsWith('-') && amountAsText.Length == 3))
         {
             amountAsText = amountAsText.Insert(amountAsText.Length - 2, "0");
         }
