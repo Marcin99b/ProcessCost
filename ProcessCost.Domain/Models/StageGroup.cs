@@ -16,4 +16,4 @@ public class StageGroup(string name, Money money, IEnumerable<Guid> stagesIds)
     {
 
     }
-}
+} 
