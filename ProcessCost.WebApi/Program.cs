@@ -67,7 +67,7 @@ static async Task InitializeDb(IHost app)
         await stagesRepository.Add(stage);
     }
 
-    await stagesGroupsRepository.Add(group);
+    await stagesGroupsRepository.Create(group);
 }
 
 public partial class Program
