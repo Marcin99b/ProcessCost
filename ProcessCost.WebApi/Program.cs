@@ -8,7 +8,10 @@ using ProcessCost.WebApi;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(x =>
+{
+    x.EnableAnnotations();
+});
 
 builder.Services.AddScoped<DatabaseContext>();
 builder.Services.AddScoped<IStagesRepository, StagesRepository>();
