@@ -9,9 +9,12 @@ public record AddStageToGroupResponse;
 public class AddStageToGroupHandler(IStagesGroupsRepository stagesGroupsRepository, IStagesRepository stagesRepository)
     : IRequestHandler<AddStageToGroupRequest, AddStageToGroupResponse>
 {
-    public Task<AddStageToGroupResponse> Handle(AddStageToGroupRequest request, CancellationToken cancellationToken)
+    public async Task<AddStageToGroupResponse> Handle(AddStageToGroupRequest request, CancellationToken cancellationToken)
     {
         var stage = stagesRepository.GetStageById(request.StageId);
-        var group = stagesGroupsRepository.
+        var group = stagesGroupsRepository.GetById(request.GroupId);
+        group.AddStage(stage);
+        await stagesGroupsRepository.Update(group);
+        return new();
     }
 }

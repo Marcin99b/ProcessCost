@@ -2,16 +2,20 @@
 
 namespace ProcessCost.Domain.Handlers;
 
-public record RemoveStageFromGroupRequest : IRequest<RemoveStageFromGroupResponse>;
+public record RemoveStageFromGroupRequest(Guid GroupId, Guid StageId) : IRequest<RemoveStageFromGroupResponse>;
 
 public record RemoveStageFromGroupResponse;
 
-public class RemoveStageFromGroupHandler(IStagesGroupsRepository stagesGroupsRepository)
+public class RemoveStageFromGroupHandler(IStagesGroupsRepository stagesGroupsRepository, IStagesRepository stagesRepository)
     : IRequestHandler<RemoveStageFromGroupRequest, RemoveStageFromGroupResponse>
 {
-    public Task<RemoveStageFromGroupResponse> Handle(RemoveStageFromGroupRequest request,
+    public async Task<RemoveStageFromGroupResponse> Handle(RemoveStageFromGroupRequest request,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var stage = stagesRepository.GetStageById(request.StageId);
+        var group = stagesGroupsRepository.GetById(request.GroupId);
+        group.RemoveStage(stage);
+        await stagesGroupsRepository.Update(group);
+        return new();
     }
 }

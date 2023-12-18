@@ -23,6 +23,11 @@ public static class RegisterApiExtensions
             ([FromServices] IMediator mediator, [FromBody] CreateStageGroupRequest request) =>
                 mediator.Send(request));
 
+        app.MapDelete(
+            "/stages/groups",
+            ([FromServices] IMediator mediator, [FromBody] DeleteStageGroupRequest request) =>
+                mediator.Send(request));
+
         app.MapPost(
             "/stages/groups/add",
             ([FromServices] IMediator mediator, [FromBody] AddStageToGroupRequest request) =>
