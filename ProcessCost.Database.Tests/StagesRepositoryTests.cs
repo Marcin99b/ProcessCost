@@ -83,8 +83,10 @@ public class StagesRepositoryTests
         context.Stages.Should().HaveCount(2);
         stages.Should().HaveCount(2);
         stages[0].Name.Should().Be("Test");
+        stages[0].Day.Should().Be(1);
         stages[0].Money.CalculationAmount.Should().Be(-50_00);
         stages[1].Name.Should().Be("A");
+        stages[1].Day.Should().Be(5);
         stages[1].Money.CalculationAmount.Should().Be(20_00);
     }
 
