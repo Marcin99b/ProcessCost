@@ -60,7 +60,7 @@ public class StagesRepositoryTests
             {
                 Id = Guid.NewGuid(),
                 Day = 1,
-                MoneyAmount = 50_00,
+                MoneyAmount = -50_00,
                 MoneyCurrency = "PLN",
                 Name = "Test",
             },
@@ -83,7 +83,7 @@ public class StagesRepositoryTests
         context.Stages.Should().HaveCount(2);
         stages.Should().HaveCount(2);
         stages[0].Name.Should().Be("Test");
-        stages[0].Money.CalculationAmount.Should().Be(50_00);
+        stages[0].Money.CalculationAmount.Should().Be(-50_00);
         stages[1].Name.Should().Be("A");
         stages[1].Money.CalculationAmount.Should().Be(20_00);
     }
@@ -103,7 +103,7 @@ public class StagesRepositoryTests
         context.Stages.Should().NotBeEmpty();
         context.Stages.First()!
             .Should()
-            .BeEquivalentTo(new StageEntity()
+            .BeEquivalentTo(new StageEntity
             {
                 Id = stage.Id,
                 Day = 5,
@@ -123,13 +123,13 @@ public class StagesRepositoryTests
         await repository.Add(stage);
 
         //Act
-        stage.UpdateMoney(new (10_00, Currency.EUR));
+        stage.UpdateMoney(new(-10_00, Currency.EUR));
         await repository.Update(stage);
         var result = await repository.GetStageById(stage.Id);
 
         //Assert
         context.Stages.Should().NotBeEmpty();
-        result!.Money.Should().BeEquivalentTo(new Money(10_00, Currency.EUR));
+        result!.Money.Should().BeEquivalentTo(new Money(-10_00, Currency.EUR));
     }
 
     [Test]

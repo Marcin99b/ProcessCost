@@ -86,8 +86,8 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
             {
                 await context.StagesGroupsReferences.AddAsync(new()
                 {
-                    Id = Guid.NewGuid(), 
-                    StageGroupId = group.Id, 
+                    Id = Guid.NewGuid(),
+                    StageGroupId = group.Id,
                     StageId = stageId,
                 });
             }

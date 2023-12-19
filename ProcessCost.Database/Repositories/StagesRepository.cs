@@ -32,6 +32,7 @@ public class StagesRepository(DatabaseContext context) : IStagesRepository
         {
             throw new NullReferenceException();
         }
+
         context.Stages.Entry(found).CurrentValues.SetValues(this.Map(stage));
         context.Stages.Update(found);
         await context.SaveChangesAsync();
