@@ -167,7 +167,7 @@ public class ApiTests
 
         mock
             .Setup(x => x.GetStageById(It.IsAny<Guid>()))
-            .Returns<Guid>(x => this._stagesInRepository.FirstOrDefault(item => item.Id == x));
+            .Returns<Guid>(x => Task.FromResult(this._stagesInRepository.FirstOrDefault(item => item.Id == x)));
 
         return mock;
     }

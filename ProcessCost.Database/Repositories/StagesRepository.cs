@@ -4,40 +4,66 @@ using ProcessCost.Domain.Models;
 
 namespace ProcessCost.Database.Repositories;
 
+//todo performance tests
 public class StagesRepository(DatabaseContext context) : IStagesRepository
 {
-    public Stage? GetStageById(Guid stageId)
+    public async Task<Stage?> GetStageById(Guid stageId)
     {
-        var stages = this.GetAllStagesOfUser(Guid.Empty);
-        return stages.FirstOrDefault();
+        var entity = await context.Stages.FindAsync(stageId);
+        return entity == null ? null : this.Map(entity);
     }
 
     public IEnumerable<Stage> GetAllStagesOfUser(Guid userId)
     {
-        var result = context.Stages.Select(x =>
-            new Stage(x.Name, x.Day, new(x.MoneyAmount, Enum.Parse<Currency>(x.MoneyCurrency))) { Id = x.Id, });
-
-        return result.AsEnumerable();
+        return context.Stages.Select(this.Map).AsEnumerable();
     }
 
     public async Task Add(Stage stage)
     {
-        var entity = new StageEntity
-        {
-            Id = stage.Id, Day = stage.Day, Name = stage.Name, MoneyAmount = stage.Money.CalculationAmount,
-            MoneyCurrency = stage.Money.Currency.ToString(),
-        };
+        var entity = this.Map(stage);
         await context.Stages.AddAsync(entity);
         await context.SaveChangesAsync();
     }
 
-    public Task Update(Stage stage)
+    public async Task Update(Stage stage)
     {
-        throw new NotImplementedException();
+        var found = await context.Stages.FindAsync(stage.Id);
+        if (found == null)
+        {
+            throw new NullReferenceException();
+        }
+        context.Stages.Entry(found).CurrentValues.SetValues(this.Map(stage));
+        context.Stages.Update(found);
+        await context.SaveChangesAsync();
     }
 
-    public Task Delete(Guid stageId)
+    public async Task Delete(Guid stageId)
     {
-        throw new NotImplementedException();
+        var found = await context.Stages.FindAsync(stageId);
+        context.Stages.Remove(found!);
+        await context.SaveChangesAsync();
+    }
+
+    private Stage Map(StageEntity entity)
+    {
+        return new(
+            entity.Name,
+            entity.Day,
+            new(entity.MoneyAmount, Enum.Parse<Currency>(entity.MoneyCurrency)))
+        {
+            Id = entity.Id,
+        };
+    }
+
+    private StageEntity Map(Stage stage)
+    {
+        return new()
+        {
+            Id = stage.Id,
+            Day = stage.Day,
+            Name = stage.Name,
+            MoneyAmount = stage.Money.CalculationAmount,
+            MoneyCurrency = stage.Money.Currency.ToString(),
+        };
     }
 }

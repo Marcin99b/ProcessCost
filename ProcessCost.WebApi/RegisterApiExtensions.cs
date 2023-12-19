@@ -1,6 +1,7 @@
 using System.Reflection;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProcessCost.Database;
 using ProcessCost.Database.Repositories;
 using ProcessCost.Domain;
@@ -67,7 +68,9 @@ public static class RegisterApiExtensions
     public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         services
-            .AddScoped<DatabaseContext>()
+            .AddScoped(_ => new DatabaseContext(new DbContextOptionsBuilder<DatabaseContext>()
+                .UseInMemoryDatabase("ProcessCostDb")
+                .Options))
             .AddScoped<IStagesRepository, StagesRepository>()
             .AddScoped<IStagesGroupsRepository, StagesGroupsRepository>();
 

@@ -14,7 +14,11 @@ public class RemoveStageFromGroupHandler(
     public async Task<RemoveStageFromGroupResponse> Handle(RemoveStageFromGroupRequest request,
         CancellationToken cancellationToken)
     {
-        var stage = stagesRepository.GetStageById(request.StageId);
+        var stage = await stagesRepository.GetStageById(request.StageId);
+        if (stage == null)
+        {
+            throw new NullReferenceException();
+        }
         var group = stagesGroupsRepository.GetById(request.GroupId);
         group.RemoveStage(stage);
         await stagesGroupsRepository.Update(group);

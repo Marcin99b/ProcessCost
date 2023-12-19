@@ -4,12 +4,13 @@ using ProcessCost.Domain.Models;
 
 namespace ProcessCost.Database.Repositories;
 
+//todo performance tests
 public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepository
 {
     public StageGroup GetById(Guid groupId)
     {
-        var groupEntity = context.StagesGropus.First(x => x.Id == groupId);
-        var refs = context.StagesGropusReferences.Where(x => x.StageGroupId == groupId);
+        var groupEntity = context.StagesGroups.First(x => x.Id == groupId);
+        var refs = context.StagesGroupsReferences.Where(x => x.StageGroupId == groupId);
 
         var group = new StageGroup(groupEntity.Name)
         {
@@ -35,7 +36,7 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
             MoneyAmount = 0,
             MoneyCurrency = group.Money.Currency.ToString(),
         };
-        await context.StagesGropus.AddAsync(groupEntity);
+        await context.StagesGroups.AddAsync(groupEntity);
         await context.SaveChangesAsync();
     }
 
@@ -51,17 +52,17 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
             MoneyCurrency = group.Money.Currency.ToString(),
         };
 
-        context.StagesGropus.Update(groupEntity);
+        context.StagesGroups.Update(groupEntity);
         await context.SaveChangesAsync();
     }
 
     public async Task Delete(Guid groupId)
     {
-        var refs = context.StagesGropusReferences.Where(x => x.StageGroupId == groupId);
-        context.StagesGropusReferences.RemoveRange(refs);
+        var refs = context.StagesGroupsReferences.Where(x => x.StageGroupId == groupId);
+        context.StagesGroupsReferences.RemoveRange(refs);
 
-        var group = context.StagesGropus.First(x => x.Id == groupId);
-        context.StagesGropus.Remove(group);
+        var group = context.StagesGroups.First(x => x.Id == groupId);
+        context.StagesGroups.Remove(group);
 
         await context.SaveChangesAsync();
     }
@@ -69,13 +70,13 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
     private async Task UpdateReferences(StageGroup group)
     {
         var registeredStagesInCurrentGroup =
-            context.StagesGropusReferences.Where(x => x.StageGroupId == group.Id);
+            context.StagesGroupsReferences.Where(x => x.StageGroupId == group.Id);
 
         foreach (var groupInDatabase in registeredStagesInCurrentGroup)
         {
             if (!group.StagesIds.Contains(groupInDatabase.StageId))
             {
-                context.StagesGropusReferences.Remove(groupInDatabase);
+                context.StagesGroupsReferences.Remove(groupInDatabase);
             }
         }
 
@@ -83,8 +84,12 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
         {
             if (!registeredStagesInCurrentGroup.Any(x => x.StageId == stageId))
             {
-                await context.StagesGropusReferences.AddAsync(new()
-                    { Id = Guid.NewGuid(), StageGroupId = group.Id, StageId = stageId, });
+                await context.StagesGroupsReferences.AddAsync(new()
+                {
+                    Id = Guid.NewGuid(), 
+                    StageGroupId = group.Id, 
+                    StageId = stageId,
+                });
             }
         }
     }
