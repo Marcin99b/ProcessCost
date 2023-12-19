@@ -46,7 +46,7 @@ public record Money
     }
 
     /// <summary>
-    /// Examples: 10,00 PLN | 1,00 PLN | -0,50 PLN | 0,50 PLN | -10,50 PLN
+    ///     Examples: 10,00 PLN | 1,00 PLN | -0,50 PLN | 0,50 PLN | -10,50 PLN
     /// </summary>
     /// <returns></returns>
     public override string ToString()

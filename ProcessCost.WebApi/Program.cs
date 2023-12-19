@@ -1,18 +1,10 @@
-using System.Reflection;
-using ProcessCost.Database;
-using ProcessCost.Database.Repositories;
-using ProcessCost.Domain;
-using ProcessCost.Domain.Models;
 using ProcessCost.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen(x => 
-    {
-        x.EnableAnnotations();
-    })
+    .AddSwaggerGen(x => { x.EnableAnnotations(); })
     .RegisterServices()
     .RegisterMediatr();
 

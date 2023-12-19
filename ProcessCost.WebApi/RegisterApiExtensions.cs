@@ -1,8 +1,8 @@
 using System.Reflection;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using ProcessCost.Database.Repositories;
 using ProcessCost.Database;
+using ProcessCost.Database.Repositories;
 using ProcessCost.Domain;
 using ProcessCost.Domain.Handlers;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,9 +20,9 @@ public static class RegisterApiExtensions
     public static WebApplication SetupStagesApiV1(this WebApplication app)
     {
         app.MapGet(
-            $"/{Version10}/stages",
-            ([FromServices] IMediator mediator) =>
-                mediator.Send(new GetStagesRequest()))
+                $"/{Version10}/stages",
+                ([FromServices] IMediator mediator) =>
+                    mediator.Send(new GetStagesRequest()))
             .WithMetadata(new SwaggerOperationAttribute(description: "Get list of all stage"))
             .WithTags(GroupStages);
 
@@ -34,30 +34,30 @@ public static class RegisterApiExtensions
             .WithTags(GroupCalculations);
 
         app.MapPost(
-            $"/{Version10}/stages/groups",
-            ([FromServices] IMediator mediator, [FromBody] CreateStageGroupRequest request) =>
-                mediator.Send(request))
+                $"/{Version10}/stages/groups",
+                ([FromServices] IMediator mediator, [FromBody] CreateStageGroupRequest request) =>
+                    mediator.Send(request))
             .WithMetadata(new SwaggerOperationAttribute(description: "Create new empty group"))
             .WithTags(GroupStagesGroups);
 
         app.MapDelete(
-            $"/{Version10}/stages/groups/{{groupId:guid}}",
-            ([FromServices] IMediator mediator, Guid groupId) =>
-                mediator.Send(new DeleteStageGroupRequest(groupId)))
+                $"/{Version10}/stages/groups/{{groupId:guid}}",
+                ([FromServices] IMediator mediator, Guid groupId) =>
+                    mediator.Send(new DeleteStageGroupRequest(groupId)))
             .WithMetadata(new SwaggerOperationAttribute(description: "Delete group with all references"))
             .WithTags(GroupStagesGroups);
 
         app.MapPost(
-            $"/{Version10}/stages/groups/add",
-            ([FromServices] IMediator mediator, [FromBody] AddStageToGroupRequest request) =>
-                mediator.Send(request))
+                $"/{Version10}/stages/groups/add",
+                ([FromServices] IMediator mediator, [FromBody] AddStageToGroupRequest request) =>
+                    mediator.Send(request))
             .WithMetadata(new SwaggerOperationAttribute(description: "Add selected stage to selected group"))
             .WithTags(GroupStagesGroups);
 
         app.MapPost(
-            $"/{Version10}/stages/groups/remove",
-            ([FromServices] IMediator mediator, [FromBody] RemoveStageFromGroupRequest request) =>
-                mediator.Send(request))
+                $"/{Version10}/stages/groups/remove",
+                ([FromServices] IMediator mediator, [FromBody] RemoveStageFromGroupRequest request) =>
+                    mediator.Send(request))
             .WithMetadata(new SwaggerOperationAttribute(description: "Remove selected stage from selected group"))
             .WithTags(GroupStagesGroups);
 

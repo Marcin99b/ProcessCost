@@ -15,7 +15,7 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
         {
             Id = groupEntity.Id,
             Money = new(groupEntity.MoneyAmount, Enum.Parse<Currency>(groupEntity.MoneyCurrency)),
-            StagesIds = refs.Select(x => x.StageId)
+            StagesIds = refs.Select(x => x.StageId),
         };
 
         return group;
@@ -84,7 +84,7 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
             if (!registeredStagesInCurrentGroup.Any(x => x.StageId == stageId))
             {
                 await context.StagesGropusReferences.AddAsync(new()
-                { Id = Guid.NewGuid(), StageGroupId = group.Id, StageId = stageId, });
+                    { Id = Guid.NewGuid(), StageGroupId = group.Id, StageId = stageId, });
             }
         }
     }

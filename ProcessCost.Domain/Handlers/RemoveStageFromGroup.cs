@@ -6,7 +6,9 @@ public record RemoveStageFromGroupRequest(Guid GroupId, Guid StageId) : IRequest
 
 public record RemoveStageFromGroupResponse;
 
-public class RemoveStageFromGroupHandler(IStagesGroupsRepository stagesGroupsRepository, IStagesRepository stagesRepository)
+public class RemoveStageFromGroupHandler(
+    IStagesGroupsRepository stagesGroupsRepository,
+    IStagesRepository stagesRepository)
     : IRequestHandler<RemoveStageFromGroupRequest, RemoveStageFromGroupResponse>
 {
     public async Task<RemoveStageFromGroupResponse> Handle(RemoveStageFromGroupRequest request,

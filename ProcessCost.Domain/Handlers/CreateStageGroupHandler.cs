@@ -10,10 +10,11 @@ public record CreateStageGroupResponse;
 public class CreateStageGroupHandler(IStagesGroupsRepository stagesGroupsRepository)
     : IRequestHandler<CreateStageGroupRequest, CreateStageGroupResponse>
 {
-    public async Task<CreateStageGroupResponse> Handle(CreateStageGroupRequest request, CancellationToken cancellationToken)
+    public async Task<CreateStageGroupResponse> Handle(CreateStageGroupRequest request,
+        CancellationToken cancellationToken)
     {
         var group = new StageGroup(request.Name);
         await stagesGroupsRepository.Create(group);
-        return new ();
+        return new();
     }
 }

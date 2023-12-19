@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using ProcessCost.Database;
 using ProcessCost.Domain;
 using ProcessCost.Domain.Handlers;
 using ProcessCost.Domain.Models;
@@ -14,6 +13,7 @@ namespace ProcessCost.IntegrationTests;
 public class ApiTests
 {
     private readonly WebApplicationFactory<Program> _factory = new();
+
     private readonly List<Stage> _stagesInRepository =
     [
         new("A", 01, new(10M, Currency.PLN)),
@@ -27,17 +27,14 @@ public class ApiTests
         new("A", 21, new(10M, Currency.PLN)),
     ];
 
-    private readonly StageGroup _stageGroupInRepository = new ("TestGroup");
+    private readonly StageGroup _stageGroupInRepository = new("TestGroup");
 
     [Test]
     public async Task GetStages_Default_ShouldReturnData()
     {
         //Arrange
-        var client = this.CreateClient(x =>
-        {
-            x.AddScoped(_ => this.MockStagesRepository().Object);
-        });
-        
+        var client = this.CreateClient(x => { x.AddScoped(_ => this.MockStagesRepository().Object); });
+
         //Act
         var response = await client.GetAsync("/v1.0/stages");
         var result = await response.ParseTo<GetStagesResponse>();
@@ -55,10 +52,7 @@ public class ApiTests
     public async Task GetStateAtDay_Default_ShouldCalculate(int day, int expectedAmount)
     {
         //Arrange
-        var client = this.CreateClient(x =>
-        {
-            x.AddScoped(_ => this.MockStagesRepository().Object);
-        });
+        var client = this.CreateClient(x => { x.AddScoped(_ => this.MockStagesRepository().Object); });
 
         //Act
         var response = await client.GetAsync($"/v1.0/state/{day}");
@@ -74,10 +68,7 @@ public class ApiTests
     {
         //Arrange
         var mockGroupsRepository = this.MockStagesGroupsRepository();
-        var client = this.CreateClient(x =>
-        {
-            x.AddScoped(_ => mockGroupsRepository.Object);
-        });
+        var client = this.CreateClient(x => { x.AddScoped(_ => mockGroupsRepository.Object); });
         var input = new CreateStageGroupRequest("GroupName");
 
         //Act
@@ -87,7 +78,7 @@ public class ApiTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         mockGroupsRepository
             .Verify(
-                x => x.Create(It.Is<StageGroup>(item => item.Name == "GroupName")), 
+                x => x.Create(It.Is<StageGroup>(item => item.Name == "GroupName")),
                 Times.Once);
     }
 
@@ -96,10 +87,7 @@ public class ApiTests
     {
         //Arrange
         var mockGroupsRepository = this.MockStagesGroupsRepository();
-        var client = this.CreateClient(x =>
-        {
-            x.AddScoped(_ => mockGroupsRepository.Object);
-        });
+        var client = this.CreateClient(x => { x.AddScoped(_ => mockGroupsRepository.Object); });
 
         //Act
         var response = await client.DeleteAsync($"/v1.0/stages/groups/{this._stageGroupInRepository.Id}");
@@ -130,7 +118,9 @@ public class ApiTests
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         mockGroupsRepository.Verify(x => x
-                .Update(It.Is<StageGroup>(item => item.Id == this._stageGroupInRepository.Id && item.StagesIds.Contains(this._stagesInRepository.Last().Id))), 
+                .Update(It.Is<StageGroup>(item =>
+                    item.Id == this._stageGroupInRepository.Id &&
+                    item.StagesIds.Contains(this._stagesInRepository.Last().Id))),
             Times.Once);
     }
 
@@ -152,8 +142,8 @@ public class ApiTests
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         mockGroupsRepository.Verify(x => x
-                .Update(It.Is<StageGroup>(item => 
-                    item.Id == this._stageGroupInRepository.Id 
+                .Update(It.Is<StageGroup>(item =>
+                    item.Id == this._stageGroupInRepository.Id
                     && !item.StagesIds.Contains(this._stagesInRepository[0].Id)
                     && item.StagesIds.Contains(this._stagesInRepository[1].Id))),
             Times.Once);
@@ -162,13 +152,7 @@ public class ApiTests
     private HttpClient CreateClient(Action<IServiceCollection>? registerServices = null)
     {
         var client = this._factory
-            .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureServices(x =>
-                {
-                    registerServices?.Invoke(x);
-                });
-            })
+            .WithWebHostBuilder(builder => { builder.ConfigureServices(x => { registerServices?.Invoke(x); }); })
             .CreateDefaultClient();
         return client;
     }
@@ -195,7 +179,7 @@ public class ApiTests
             this._stageGroupInRepository.AddStage(this._stagesInRepository[0]);
             this._stageGroupInRepository.AddStage(this._stagesInRepository[1]);
         }
-        
+
         var mock = new Mock<IStagesGroupsRepository>();
         mock
             .Setup(x => x.GetById(It.IsAny<Guid>()))
