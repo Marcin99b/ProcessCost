@@ -1,4 +1,6 @@
-﻿namespace ProcessCost.Domain.Models;
+﻿using ProcessCost.Domain.Exceptions;
+
+namespace ProcessCost.Domain.Models;
 
 public class StageGroup(string name)
 {
@@ -24,7 +26,7 @@ public class StageGroup(string name)
     {
         if (this._stagesIds.Contains(stage.Id))
         {
-            throw new("Group already contains stage");
+            throw new StageGroupAlreadyContainsStageException();
         }
 
         this._money += stage.Money;
@@ -35,7 +37,7 @@ public class StageGroup(string name)
     {
         if (!this._stagesIds.Contains(stage.Id))
         {
-            throw new("Group doesn't contains stage");
+            throw new StageGroupNotContainsStageException();
         }
 
         this._money -= stage.Money;

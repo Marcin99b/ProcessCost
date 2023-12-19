@@ -1,4 +1,6 @@
-﻿namespace ProcessCost.Domain.Models;
+﻿using ProcessCost.Domain.Exceptions;
+
+namespace ProcessCost.Domain.Models;
 
 public record Money
 {
@@ -25,7 +27,7 @@ public record Money
     {
         if (a.Currency != b.Currency)
         {
-            throw new ArgumentException("Money must have same currency");
+            throw new CannotAddMoneyCausedByDifferentCurrencyException();
         }
 
         var sum = a.CalculationAmount + b.CalculationAmount;
@@ -36,7 +38,7 @@ public record Money
     {
         if (a.Currency != b.Currency)
         {
-            throw new ArgumentException("Money must have same currency");
+            throw new CannotSubtractMoneyCausedByDifferentCurrencyException();
         }
 
         var sum = a.CalculationAmount - b.CalculationAmount;

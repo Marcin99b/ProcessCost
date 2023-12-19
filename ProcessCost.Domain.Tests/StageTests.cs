@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using ProcessCost.Domain.Exceptions;
 using ProcessCost.Domain.Models;
 
 namespace ProcessCost.Domain.Tests;
@@ -85,7 +86,7 @@ public class StageTests
         ;
 
         //Assert
-        act.Should().Throw<Exception>().WithMessage("Group already contains stage");
+        act.Should().Throw<StageGroupAlreadyContainsStageException>();
     }
 
     [Test]
@@ -99,6 +100,6 @@ public class StageTests
         var act = () => group.RemoveStage(stage);
 
         //Assert
-        act.Should().Throw<Exception>().WithMessage("Group doesn't contains stage");
+        act.Should().Throw<StageGroupNotContainsStageException>();
     }
 }

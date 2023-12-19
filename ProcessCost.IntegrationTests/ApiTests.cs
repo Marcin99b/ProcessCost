@@ -134,6 +134,31 @@ public class ApiTests
             Times.Once);
     }
 
+    [Test]
+    public async Task RemoveStageFromGroup_Default_ShouldRemove()
+    {
+        //Arrange
+        var mockGroupsRepository = this.MockStagesGroupsRepository();
+        var client = this.CreateClient(x =>
+        {
+            x.AddScoped(_ => this.MockStagesRepository().Object);
+            x.AddScoped(_ => mockGroupsRepository.Object);
+        });
+        var input = new RemoveStageFromGroupRequest(this._stageGroupInRepository.Id, this._stagesInRepository[0].Id);
+
+        //Act
+        var response = await client.SendPost("/v1.0/stages/groups/remove", input);
+
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        mockGroupsRepository.Verify(x => x
+                .Update(It.Is<StageGroup>(item => 
+                    item.Id == this._stageGroupInRepository.Id 
+                    && !item.StagesIds.Contains(this._stagesInRepository[0].Id)
+                    && item.StagesIds.Contains(this._stagesInRepository[1].Id))),
+            Times.Once);
+    }
+
     private HttpClient CreateClient(Action<IServiceCollection>? registerServices = null)
     {
         var client = this._factory
