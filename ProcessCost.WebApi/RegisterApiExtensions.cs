@@ -1,5 +1,9 @@
+using System.Reflection;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ProcessCost.Database.Repositories;
+using ProcessCost.Database;
+using ProcessCost.Domain;
 using ProcessCost.Domain.Handlers;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -58,5 +62,29 @@ public static class RegisterApiExtensions
             .WithTags(GroupStagesGroups);
 
         return app;
+    }
+
+    public static IServiceCollection RegisterServices(this IServiceCollection services)
+    {
+        services
+            .AddScoped<DatabaseContext>()
+            .AddScoped<IStagesRepository, StagesRepository>()
+            .AddScoped<IStagesGroupsRepository, StagesGroupsRepository>();
+
+        return services;
+    }
+
+    public static IServiceCollection RegisterMediatr(this IServiceCollection services)
+    {
+        var assemblies = typeof(Program)
+            .Assembly
+            .GetReferencedAssemblies()
+            .Select(Assembly.Load)
+            .ToArray();
+
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssemblies(assemblies));
+
+        return services;
     }
 }
