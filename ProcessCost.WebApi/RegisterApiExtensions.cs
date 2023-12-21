@@ -12,23 +12,23 @@ namespace ProcessCost.WebApi;
 
 public static class RegisterApiExtensions
 {
-    private const string GroupStages = "Stages";
-    private const string GroupCalculations = "Calculations";
-    private const string GroupStagesGroups = "Stages Groups";
+    private const string GroupStagesV1 = "Stages V1";
+    private const string GroupCalculationsV1 = "Calculations V1";
+    private const string GroupStagesGroupsV1 = "Stages Groups V1";
 
     private const string Version10 = "v1.0";
 
     public static WebApplication SetupStagesApiV1(this WebApplication app)
     {
         return app
-            .GetStagesV1(GroupStages)
-            .AddStageV1(GroupStages)
-            .UpdateStageMoneyV1(GroupStages)
-            .GetStateAtSelectedDayV1(GroupCalculations)
-            .CreateStageGroupV1(GroupStagesGroups)
-            .DeleteStageGroupV1(GroupStagesGroups)
-            .AddStageToGroupV1(GroupStagesGroups)
-            .RemoveStageFromGroupV1(GroupStagesGroups);
+            .GetStagesV1(GroupStagesV1)
+            .AddStageV1(GroupStagesV1)
+            .UpdateStageMoneyV1(GroupStagesV1)
+            .GetStateAtSelectedDayV1(GroupCalculationsV1)
+            .CreateStageGroupV1(GroupStagesGroupsV1)
+            .DeleteStageGroupV1(GroupStagesGroupsV1)
+            .AddStageToGroupV1(GroupStagesGroupsV1)
+            .RemoveStageFromGroupV1(GroupStagesGroupsV1);
     }
 
     private static WebApplication GetStagesV1(this WebApplication app, params string[] tags)
