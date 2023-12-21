@@ -2,12 +2,33 @@
 using ProcessCost.Database.Entities;
 using ProcessCost.Domain;
 using ProcessCost.Domain.Models;
+using System.Text.RegularExpressions;
 
 namespace ProcessCost.Database.Repositories;
 
-//todo performance tests
 public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepository
 {
+    public async IAsyncEnumerable<StageGroup> GetGroupsByStageId(Guid stageId)
+    {
+        var refs = context.StagesGroupsReferences
+            .Where(x => x.StageId == stageId);
+
+        foreach (var reference in refs)
+        {
+            var groupEntity = await context.StagesGroups.FirstAsync(x => x.Id == reference.StageGroupId);
+
+            var refsRelatedToCurrentGroup = refs
+                .Where(x => x.StageGroupId == groupEntity.Id);
+            var item = new StageGroup(groupEntity.Name)
+            {
+                Id = groupEntity.Id,
+                Money = new(groupEntity.MoneyAmount, Enum.Parse<Currency>(groupEntity.MoneyCurrency)),
+                StagesIds = refsRelatedToCurrentGroup.Select(x => x.StageId),
+            };
+            yield return item;
+        }
+    }
+
     public async Task<StageGroup?> GetById(Guid groupId)
     {
         var groupEntity = await context.StagesGroups

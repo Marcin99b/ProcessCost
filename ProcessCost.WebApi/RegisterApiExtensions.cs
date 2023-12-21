@@ -80,7 +80,7 @@ public static class RegisterApiExtensions
                 .Options))
             .AddScoped<IStagesRepository, StagesRepository>()
             .AddScoped<IStagesGroupsRepository, StagesGroupsRepository>()
-            .AddSingleton<StagesEventBus>()
+            .AddSingleton<IStagesEventBus, StagesEventBus>()
             .AddHostedService<EventBusExecutor>();
 
         return services;

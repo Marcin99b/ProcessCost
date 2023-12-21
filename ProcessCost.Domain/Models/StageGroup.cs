@@ -43,4 +43,9 @@ public class StageGroup(string name)
         this._money -= stage.Money;
         this._stagesIds.Remove(stage.Id);
     }
+
+    public void UpdateMoney(Money money)
+    {
+        this._money = money;
+    }
 }

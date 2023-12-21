@@ -1,5 +1,4 @@
-﻿using System.Net;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +8,7 @@ using ProcessCost.Database.Repositories;
 using ProcessCost.Domain;
 using ProcessCost.Domain.Handlers;
 using ProcessCost.Domain.Models;
+using System.Net;
 
 namespace ProcessCost.IntegrationTests;
 
@@ -167,11 +167,29 @@ public class ApiTests
             x.AddScoped(_ => mockRepository.Object);
             x.AddScoped(_ => mockGroupsRepository.Object);
         });
+        //old stage value = 10_00
+        //new stage value = 50_00
+        //expected group change = +40_00
+        //old group value = 20_00
+        var expectedGroupValue = 60_00;
+        var input = new UpdateStageMoneyRequest(this._stagesInRepository[0].Id, new(50_00, Currency.PLN));
 
         //Act
-        //TODO - endpoint for update stage
-
+        var response = await client.SendPost("/v1.0/stages/money", input);
+        
         //Arrange
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        //wait for background service
+        await Task.Delay(100); //todo add more reliable method to check background service
+
+        mockGroupsRepository.Verify(x => x.GetGroupsByStageId(this._stagesInRepository[0].Id), Times.Once);
+        mockGroupsRepository
+            .Verify(x => x
+                .Update(It.Is<StageGroup>(group => 
+                    group.Id == this._stageGroupInRepository.Id && 
+                    group.Money.CalculationAmount == expectedGroupValue)), 
+                Times.Once);
     }
 
     private HttpClient CreateClient(Action<IServiceCollection>? registerServices = null)
@@ -229,6 +247,9 @@ public class ApiTests
 
         var mock = new Mock<IStagesGroupsRepository>();
 
+        mock
+            .Setup(x => x.GetGroupsByStageId(It.IsAny<Guid>()))
+            .Returns<Guid>(repository.GetGroupsByStageId);
         mock
             .Setup(x => x.GetById(It.IsAny<Guid>()))
             .Returns<Guid>(repository.GetById);
