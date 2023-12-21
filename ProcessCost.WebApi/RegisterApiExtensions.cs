@@ -28,10 +28,17 @@ public static class RegisterApiExtensions
             .WithTags(GroupStages);
 
         app.MapPost(
+                $"/{Version10}/stages",
+                ([FromServices] IMediator mediator, [FromBody] AddStageRequest request) =>
+                    mediator.Send(request))
+            .WithMetadata(new SwaggerOperationAttribute(description: "Create new stage"))
+            .WithTags(GroupStages);
+
+        app.MapPost(
                 $"/{Version10}/stages/money",
                 ([FromServices] IMediator mediator, [FromBody] UpdateStageMoneyRequest request) =>
                     mediator.Send(request))
-            .WithMetadata(new SwaggerOperationAttribute(description: "Update money in selected stage"))
+            .WithMetadata(new SwaggerOperationAttribute(description: "Update money in selected stage and dependencies"))
             .WithTags(GroupStages);
 
         app.MapGet(

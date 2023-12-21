@@ -69,6 +69,28 @@ public class ApiTests
     }
 
     [Test]
+    public async Task AddStage_Default_ShouldCreate()
+    {
+        //Arrange
+        var mockRepository = await this.MockStagesRepository();
+        var client = this.CreateClient(x => { x.AddScoped(_ => mockRepository.Object); });
+        var input = new AddStageRequest("StageName", 2, 10M, "USD");
+
+        //Act
+        var response = await client.SendPost("/v1.0/stages", input);
+
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        mockRepository
+            .Verify(
+                x => x.Add(It.Is<Stage>(item => 
+                    item.Name == "StageName" && 
+                    item.Day == 2 && 
+                    item.Money == new Money(10_00, Currency.USD))),
+                Times.Once);
+    }
+
+    [Test]
     public async Task CreateStageGroup_Default_ShouldCreate()
     {
         //Arrange
@@ -157,7 +179,7 @@ public class ApiTests
     }
 
     [Test]
-    public async Task ShouldUpdateGroupValueAfterChangeStageValue()
+    public async Task UpdateStageMoney_Default_ShouldUpdateGroupMoney()
     {
         //Arrange
         var mockGroupsRepository = await this.MockStagesGroupsRepository();
