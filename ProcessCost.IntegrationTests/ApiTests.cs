@@ -165,6 +165,24 @@ public class ApiTests
             Times.Once);
     }
 
+    [Test]
+    public async Task ShouldUpdateGroupValueAfterChangeStageValue()
+    {
+        //Arrange
+        var mockGroupsRepository = await this.MockStagesGroupsRepository();
+        var mockRepository = await this.MockStagesRepository();
+        var client = this.CreateClient(x =>
+        {
+            x.AddScoped(_ => mockRepository.Object);
+            x.AddScoped(_ => mockGroupsRepository.Object);
+        });
+
+        //Act
+        //TODO - endpoint for update stage
+
+        //Arrange
+    }
+
     private HttpClient CreateClient(Action<IServiceCollection>? registerServices = null)
     {
         var client = this._factory
