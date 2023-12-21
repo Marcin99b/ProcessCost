@@ -11,10 +11,11 @@ public class EventBusExecutor(IStagesEventBus eventBus, IServiceProvider service
         var groupsRepository = scope.ServiceProvider.GetService<IStagesGroupsRepository>()!;
         await foreach (var stageEvent in eventBus.Subscribe(stoppingToken))
         {
-            if (stageEvent is StageUpdatedMoneyEvent updatedMoneyEvent)
+            await (stageEvent switch 
             {
-                await this.ProcessStageUpdatedMoneyEvent(groupsRepository, updatedMoneyEvent);
-            }
+                StageUpdatedMoneyEvent x => this.ProcessStageUpdatedMoneyEvent(groupsRepository, x),
+                _ => Task.CompletedTask,
+            });
         }
     }
 

@@ -195,7 +195,10 @@ public class ApiTests
     private HttpClient CreateClient(Action<IServiceCollection>? registerServices = null)
     {
         var client = this._factory
-            .WithWebHostBuilder(builder => { builder.ConfigureServices(x => { registerServices?.Invoke(x); }); })
+            .WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(x => { registerServices?.Invoke(x); });
+            })
             .CreateDefaultClient();
         return client;
     }
