@@ -2,7 +2,7 @@
 
 namespace ProcessCost.Database.Entities;
 
-public record Entity
+public abstract record Entity
 {
     [Key] public Guid Id { get; set; }
 }
