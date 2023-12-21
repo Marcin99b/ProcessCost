@@ -19,6 +19,7 @@ public class EventBusExecutor(IStagesEventBus eventBus, IServiceProvider service
         }
     }
 
+    //todo move to dedicated object
     private async Task ProcessStageUpdatedMoneyEvent(IStagesGroupsRepository groupsRepository,
         StageUpdatedMoneyEvent updatedMoneyEvent)
     {
