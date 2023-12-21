@@ -37,10 +37,7 @@ public class ApiTests
     {
         //Arrange
         var mockRepository = await this.MockStagesRepository();
-        var client = this.CreateClient(x =>
-        {
-            x.AddScoped(_ => mockRepository.Object);
-        });
+        var client = this.CreateClient(x => { x.AddScoped(_ => mockRepository.Object); });
 
         //Act
         var response = await client.GetAsync("/v1.0/stages");
@@ -60,10 +57,7 @@ public class ApiTests
     {
         //Arrange
         var mockRepository = await this.MockStagesRepository();
-        var client = this.CreateClient(x =>
-        {
-            x.AddScoped(_ => mockRepository.Object);
-        });
+        var client = this.CreateClient(x => { x.AddScoped(_ => mockRepository.Object); });
 
         //Act
         var response = await client.GetAsync($"/v1.0/state/{day}");
@@ -98,10 +92,7 @@ public class ApiTests
     {
         //Arrange
         var mockGroupsRepository = await this.MockStagesGroupsRepository();
-        var client = this.CreateClient(x =>
-        {
-            x.AddScoped(_ => mockGroupsRepository.Object);
-        });
+        var client = this.CreateClient(x => { x.AddScoped(_ => mockGroupsRepository.Object); });
 
         //Act
         var response = await client.DeleteAsync($"/v1.0/stages/groups/{this._stageGroupInRepository.Id}");

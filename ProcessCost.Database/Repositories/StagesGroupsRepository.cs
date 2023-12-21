@@ -16,6 +16,7 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
         {
             return null;
         }
+
         var refs = context.StagesGroupsReferences
             .Where(x => x.StageGroupId == groupId);
 

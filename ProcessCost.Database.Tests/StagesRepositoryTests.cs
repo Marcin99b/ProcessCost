@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using ProcessCost.Database.Entities;
 using ProcessCost.Database.Repositories;
 using ProcessCost.Domain.Models;
-using System.Text.RegularExpressions;
 
 namespace ProcessCost.Database.Tests;
 

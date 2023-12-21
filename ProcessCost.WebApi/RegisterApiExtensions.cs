@@ -28,9 +28,9 @@ public static class RegisterApiExtensions
             .WithTags(GroupStages);
 
         app.MapPost(
-            $"/{Version10}/stages/money",
-            ([FromServices] IMediator mediator, [FromBody] UpdateStageMoneyRequest request) => 
-                mediator.Send(request))
+                $"/{Version10}/stages/money",
+                ([FromServices] IMediator mediator, [FromBody] UpdateStageMoneyRequest request) =>
+                    mediator.Send(request))
             .WithMetadata(new SwaggerOperationAttribute(description: "Update money in selected stage"))
             .WithTags(GroupStages);
 

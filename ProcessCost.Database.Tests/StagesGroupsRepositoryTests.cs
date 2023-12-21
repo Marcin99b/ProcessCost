@@ -49,7 +49,7 @@ public class StagesGroupsRepositoryTests
         {
             Id = groupId,
             Money = new(50_00, Currency.USD),
-            StagesIds = new []{stage1Id, stage2Id,},
+            StagesIds = new[] { stage1Id, stage2Id, },
         });
     }
 
@@ -87,7 +87,7 @@ public class StagesGroupsRepositoryTests
         };
         var repository = new StagesGroupsRepository(context);
         await repository.Create(stageGroup);
-        var newStage = new Stage("abc", 5, new Money(10_00, Currency.USD));
+        var newStage = new Stage("abc", 5, new(10_00, Currency.USD));
 
         //Act
         stageGroup.AddStage(newStage);
