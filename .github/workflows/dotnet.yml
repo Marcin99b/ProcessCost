@@ -25,10 +25,8 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: | 
-        curl -Os https://uploader.codecov.io/latest/linux/codecov
-        chmod +x codecov
-        dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-        ./codecov -f "/ProcessCost.IntegrationTests/coverage.opencover.xml"
-        ./codecov -f "/ProcessCost.Domain.Tests/coverage.opencover.xml"
-        ./codecov -f "/ProcessCost.Database.Tests/coverage.opencover.xml"
+      run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
