@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,6 @@ using ProcessCost.Database.Repositories;
 using ProcessCost.Domain;
 using ProcessCost.Domain.Handlers;
 using ProcessCost.Domain.Models;
-using System.Net;
 
 namespace ProcessCost.IntegrationTests;
 
@@ -176,7 +176,7 @@ public class ApiTests
 
         //Act
         var response = await client.SendPost("/v1.0/stages/money", input);
-        
+
         //Arrange
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -186,9 +186,9 @@ public class ApiTests
         mockGroupsRepository.Verify(x => x.GetGroupsByStageId(this._stagesInRepository[0].Id), Times.Once);
         mockGroupsRepository
             .Verify(x => x
-                .Update(It.Is<StageGroup>(group => 
-                    group.Id == this._stageGroupInRepository.Id && 
-                    group.Money.CalculationAmount == expectedGroupValue)), 
+                    .Update(It.Is<StageGroup>(group =>
+                        group.Id == this._stageGroupInRepository.Id &&
+                        group.Money.CalculationAmount == expectedGroupValue)),
                 Times.Once);
     }
 

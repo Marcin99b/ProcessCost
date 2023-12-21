@@ -10,7 +10,7 @@ public record StageUpdatedMoneyEvent(Money OldMoney, Stage UpdatedStage) : IStag
 public interface IStagesEventBus
 {
     ValueTask Publish(IStageEvent stageEvent);
-    IAsyncEnumerable<IStageEvent> Subscribe(CancellationToken  cancellationToken);
+    IAsyncEnumerable<IStageEvent> Subscribe(CancellationToken cancellationToken);
 }
 
 public class StagesEventBus : IStagesEventBus

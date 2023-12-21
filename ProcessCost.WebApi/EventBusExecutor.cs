@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProcessCost.Domain;
+﻿using ProcessCost.Domain;
 using ProcessCost.Domain.Models;
 
 namespace ProcessCost.WebApi;
@@ -19,12 +18,13 @@ public class EventBusExecutor(IStagesEventBus eventBus, IServiceProvider service
         }
     }
 
-    private async Task ProcessStageUpdatedMoneyEvent(IStagesGroupsRepository groupsRepository, StageUpdatedMoneyEvent updatedMoneyEvent)
+    private async Task ProcessStageUpdatedMoneyEvent(IStagesGroupsRepository groupsRepository,
+        StageUpdatedMoneyEvent updatedMoneyEvent)
     {
         var moneyDifference = updatedMoneyEvent.UpdatedStage.Money.CalculationAmount -
             updatedMoneyEvent.OldMoney.CalculationAmount;
         var groups = groupsRepository.GetGroupsByStageId(updatedMoneyEvent.UpdatedStage.Id);
-        await foreach(var group in groups)
+        await foreach (var group in groups)
         {
             //todo check currency change
             var newMoney = new Money(group.Money.CalculationAmount + moneyDifference, group.Money.Currency);
