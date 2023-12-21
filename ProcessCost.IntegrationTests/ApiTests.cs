@@ -183,11 +183,11 @@ public class ApiTests
         var mock = new Mock<IStagesGroupsRepository>();
         mock
             .Setup(x => x.GetById(It.IsAny<Guid>()))
-            .Returns(this._stageGroupInRepository);
+            .Returns(Task.FromResult(this._stageGroupInRepository)!);
 
         mock
             .Setup(x => x.GetById(this._stageGroupInRepository.Id))
-            .Returns(this._stageGroupInRepository);
+            .Returns(Task.FromResult(this._stageGroupInRepository)!);
 
         return mock;
     }

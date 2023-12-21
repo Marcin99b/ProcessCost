@@ -20,8 +20,8 @@ public class RemoveStageFromGroupHandler(
             throw new NullReferenceException();
         }
 
-        var group = stagesGroupsRepository.GetById(request.GroupId);
-        group.RemoveStage(stage);
+        var group = await stagesGroupsRepository.GetById(request.GroupId);
+        group!.RemoveStage(stage);
         await stagesGroupsRepository.Update(group);
         return new();
     }

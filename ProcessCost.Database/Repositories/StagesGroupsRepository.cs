@@ -1,4 +1,5 @@
-﻿using ProcessCost.Database.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ProcessCost.Database.Entities;
 using ProcessCost.Domain;
 using ProcessCost.Domain.Models;
 
@@ -7,10 +8,16 @@ namespace ProcessCost.Database.Repositories;
 //todo performance tests
 public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepository
 {
-    public StageGroup GetById(Guid groupId)
+    public async Task<StageGroup?> GetById(Guid groupId)
     {
-        var groupEntity = context.StagesGroups.First(x => x.Id == groupId);
-        var refs = context.StagesGroupsReferences.Where(x => x.StageGroupId == groupId);
+        var groupEntity = await context.StagesGroups
+            .FirstOrDefaultAsync(x => x.Id == groupId);
+        if (groupEntity == null)
+        {
+            return null;
+        }
+        var refs = context.StagesGroupsReferences
+            .Where(x => x.StageGroupId == groupId);
 
         var group = new StageGroup(groupEntity.Name)
         {
@@ -33,7 +40,7 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
         {
             Id = group.Id,
             Name = group.Name,
-            MoneyAmount = 0,
+            MoneyAmount = group.Money.CalculationAmount,
             MoneyCurrency = group.Money.Currency.ToString(),
         };
         await context.StagesGroups.AddAsync(groupEntity);
@@ -52,7 +59,8 @@ public class StagesGroupsRepository(DatabaseContext context) : IStagesGroupsRepo
             MoneyCurrency = group.Money.Currency.ToString(),
         };
 
-        context.StagesGroups.Update(groupEntity);
+        var found = (await context.StagesGroups.FindAsync(groupEntity.Id))!;
+        context.StagesGroups.Entry(found).CurrentValues.SetValues(groupEntity);
         await context.SaveChangesAsync();
     }
 

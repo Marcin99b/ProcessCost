@@ -18,8 +18,8 @@ public class AddStageToGroupHandler(IStagesGroupsRepository stagesGroupsReposito
             throw new NullReferenceException();
         }
 
-        var group = stagesGroupsRepository.GetById(request.GroupId);
-        group.AddStage(stage);
+        var group = await stagesGroupsRepository.GetById(request.GroupId);
+        group!.AddStage(stage);
         await stagesGroupsRepository.Update(group);
         return new();
     }
