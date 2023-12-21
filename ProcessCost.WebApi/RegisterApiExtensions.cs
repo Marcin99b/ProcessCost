@@ -27,6 +27,13 @@ public static class RegisterApiExtensions
             .WithMetadata(new SwaggerOperationAttribute(description: "Get list of all stage"))
             .WithTags(GroupStages);
 
+        app.MapPost(
+            $"/{Version10}/stages/money",
+            ([FromServices] IMediator mediator, [FromBody] UpdateStageMoneyRequest request) => 
+                mediator.Send(request))
+            .WithMetadata(new SwaggerOperationAttribute(description: "Update money in selected stage"))
+            .WithTags(GroupStages);
+
         app.MapGet(
                 $"/{Version10}/state/{{day:int}}",
                 ([FromServices] IMediator mediator, int day) =>
@@ -72,7 +79,9 @@ public static class RegisterApiExtensions
                 .UseInMemoryDatabase("ProcessCostDb")
                 .Options))
             .AddScoped<IStagesRepository, StagesRepository>()
-            .AddScoped<IStagesGroupsRepository, StagesGroupsRepository>();
+            .AddScoped<IStagesGroupsRepository, StagesGroupsRepository>()
+            .AddSingleton<StagesEventBus>()
+            .AddHostedService<EventBusExecutor>();
 
         return services;
     }
