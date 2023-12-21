@@ -1,8 +1,11 @@
 ﻿using System.Net;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using ProcessCost.Database;
+using ProcessCost.Database.Repositories;
 using ProcessCost.Domain;
 using ProcessCost.Domain.Handlers;
 using ProcessCost.Domain.Models;
@@ -33,7 +36,11 @@ public class ApiTests
     public async Task GetStages_Default_ShouldReturnData()
     {
         //Arrange
-        var client = this.CreateClient(x => { x.AddScoped(_ => this.MockStagesRepository().Object); });
+        var mockRepository = await this.MockStagesRepository();
+        var client = this.CreateClient(x =>
+        {
+            x.AddScoped(_ => mockRepository.Object);
+        });
 
         //Act
         var response = await client.GetAsync("/v1.0/stages");
@@ -52,7 +59,11 @@ public class ApiTests
     public async Task GetStateAtDay_Default_ShouldCalculate(int day, int expectedAmount)
     {
         //Arrange
-        var client = this.CreateClient(x => { x.AddScoped(_ => this.MockStagesRepository().Object); });
+        var mockRepository = await this.MockStagesRepository();
+        var client = this.CreateClient(x =>
+        {
+            x.AddScoped(_ => mockRepository.Object);
+        });
 
         //Act
         var response = await client.GetAsync($"/v1.0/state/{day}");
@@ -67,7 +78,7 @@ public class ApiTests
     public async Task CreateStageGroup_Default_ShouldCreate()
     {
         //Arrange
-        var mockGroupsRepository = this.MockStagesGroupsRepository();
+        var mockGroupsRepository = await this.MockStagesGroupsRepository();
         var client = this.CreateClient(x => { x.AddScoped(_ => mockGroupsRepository.Object); });
         var input = new CreateStageGroupRequest("GroupName");
 
@@ -86,8 +97,11 @@ public class ApiTests
     public async Task DeleteStageGroup_Default_ShouldDelete()
     {
         //Arrange
-        var mockGroupsRepository = this.MockStagesGroupsRepository();
-        var client = this.CreateClient(x => { x.AddScoped(_ => mockGroupsRepository.Object); });
+        var mockGroupsRepository = await this.MockStagesGroupsRepository();
+        var client = this.CreateClient(x =>
+        {
+            x.AddScoped(_ => mockGroupsRepository.Object);
+        });
 
         //Act
         var response = await client.DeleteAsync($"/v1.0/stages/groups/{this._stageGroupInRepository.Id}");
@@ -104,10 +118,11 @@ public class ApiTests
     public async Task AddStageToGroup_Default_ShouldAdd()
     {
         //Arrange
-        var mockGroupsRepository = this.MockStagesGroupsRepository();
+        var mockGroupsRepository = await this.MockStagesGroupsRepository();
+        var mockRepository = await this.MockStagesRepository();
         var client = this.CreateClient(x =>
         {
-            x.AddScoped(_ => this.MockStagesRepository().Object);
+            x.AddScoped(_ => mockRepository.Object);
             x.AddScoped(_ => mockGroupsRepository.Object);
         });
         var input = new AddStageToGroupRequest(this._stageGroupInRepository.Id, this._stagesInRepository.Last().Id);
@@ -128,10 +143,11 @@ public class ApiTests
     public async Task RemoveStageFromGroup_Default_ShouldRemove()
     {
         //Arrange
-        var mockGroupsRepository = this.MockStagesGroupsRepository();
+        var mockGroupsRepository = await this.MockStagesGroupsRepository();
+        var mockRepository = await this.MockStagesRepository();
         var client = this.CreateClient(x =>
         {
-            x.AddScoped(_ => this.MockStagesRepository().Object);
+            x.AddScoped(_ => mockRepository.Object);
             x.AddScoped(_ => mockGroupsRepository.Object);
         });
         var input = new RemoveStageFromGroupRequest(this._stageGroupInRepository.Id, this._stagesInRepository[0].Id);
@@ -157,22 +173,41 @@ public class ApiTests
         return client;
     }
 
-    private Mock<IStagesRepository> MockStagesRepository()
+    private async Task<Mock<IStagesRepository>> MockStagesRepository()
     {
+        var repository = new StagesRepository(this.CreateContext());
+
+        foreach (var stage in this._stagesInRepository)
+        {
+            await repository.Add(stage);
+        }
+
         var mock = new Mock<IStagesRepository>();
 
         mock
             .Setup(x => x.GetAllStagesOfUser(It.IsAny<Guid>()))
-            .Returns(this._stagesInRepository);
+            .Returns<Guid>(repository.GetAllStagesOfUser);
 
         mock
             .Setup(x => x.GetStageById(It.IsAny<Guid>()))
-            .Returns<Guid>(x => Task.FromResult(this._stagesInRepository.FirstOrDefault(item => item.Id == x)));
+            .Returns<Guid>(repository.GetStageById);
+
+        mock
+            .Setup(x => x.Add(It.IsAny<Stage>()))
+            .Returns<Stage>(repository.Add);
+
+        mock
+            .Setup(x => x.Update(It.IsAny<Stage>()))
+            .Returns<Stage>(repository.Update);
+
+        mock
+            .Setup(x => x.Delete(It.IsAny<Guid>()))
+            .Returns<Guid>(repository.Delete);
 
         return mock;
     }
 
-    private Mock<IStagesGroupsRepository> MockStagesGroupsRepository()
+    private async Task<Mock<IStagesGroupsRepository>> MockStagesGroupsRepository()
     {
         if (!this._stageGroupInRepository.StagesIds.Any())
         {
@@ -180,15 +215,33 @@ public class ApiTests
             this._stageGroupInRepository.AddStage(this._stagesInRepository[1]);
         }
 
+        var repository = new StagesGroupsRepository(this.CreateContext());
+        await repository.Create(this._stageGroupInRepository);
+
         var mock = new Mock<IStagesGroupsRepository>();
+
         mock
             .Setup(x => x.GetById(It.IsAny<Guid>()))
-            .Returns(Task.FromResult(this._stageGroupInRepository)!);
-
+            .Returns<Guid>(repository.GetById);
         mock
-            .Setup(x => x.GetById(this._stageGroupInRepository.Id))
-            .Returns(Task.FromResult(this._stageGroupInRepository)!);
+            .Setup(x => x.Create(It.IsAny<StageGroup>()))
+            .Returns<StageGroup>(repository.Create);
+        mock
+            .Setup(x => x.Update(It.IsAny<StageGroup>()))
+            .Returns<StageGroup>(repository.Update);
+        mock
+            .Setup(x => x.Delete(It.IsAny<Guid>()))
+            .Returns<Guid>(repository.Delete);
+
 
         return mock;
+    }
+
+    private DatabaseContext CreateContext()
+    {
+        var options = new DbContextOptionsBuilder<DatabaseContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        return new(options);
     }
 }
